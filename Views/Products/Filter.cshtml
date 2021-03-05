@@ -1,0 +1,32 @@
+﻿@model IEnumerable<Product>
+
+
+
+@{
+    ViewData["Title"] = "Filter";
+}
+
+<h1>Index2</h1>
+
+
+<form asp-controller="Products" asp-action="Filter" method="get">
+    <div class="input-group mt-3">
+        <input type="text" name="category" class="form-control" placeholder="Search on category" />
+        <div class="input-group-append">
+            <input type="submit" class="btn btn-primary" value="Search" />
+        </div>
+    </div>
+</form>
+
+
+
+
+@foreach (var p in Model)
+{
+    <div>
+        <h2>Namn: @p.Name</h2>
+        <h3>Pris: @p.Price.ToString("c")</h3>
+    </div>
+}
+
+

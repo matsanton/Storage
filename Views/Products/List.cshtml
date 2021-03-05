@@ -1,0 +1,18 @@
+﻿@model IEnumerable<ProductViewModel>
+
+@{ 
+    ViewData["Title"] = "List";
+}
+
+<h2>List</h2>
+@foreach (var p in Model)
+{
+    <div>
+        <h2>Namn: @p.Name</h2>
+        <h3>Pris: @p.Price.ToString("c")</h3>
+        <h3>Antal: @p.Count</h3>
+        <h4>Värde: @p.InventoryValue.ToString("c")</h4>
+    </div>
+}
+
+

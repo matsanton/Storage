@@ -7,17 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Storage.Data;
 using Storage.Models;
+using Storage.Models.ViewModels;
 
 namespace Storage.Controllers
 {
     public class ProductsController : Controller
     {
+        #region Private fields
         private readonly StorageContext _context;
+        #endregion
 
+        #region Contructor
         public ProductsController(StorageContext context)
         {
             _context = context;
         }
+        #endregion
+
+        #region Actions
 
         // GET: Products
         public async Task<IActionResult> Index()
@@ -48,6 +55,30 @@ namespace Storage.Controllers
         {
             return View();
         }
+
+        public async Task<IActionResult> List()
+        {
+            var model = _context.Product.Select(p => new ProductViewModel
+            {
+                Name = p.Name,
+                Price = p.Price,
+                Count = p.Count,
+                InventoryValue = p.Price * p.Count
+            });
+
+            return View(await model.ToListAsync());
+        }
+
+        public IActionResult Filter(string category)
+        {
+            var model = String.IsNullOrWhiteSpace(category) ?
+                _context.Product :
+                _context.Product.Where(p => p.Category == category);
+
+            ViewBag.CurrentCategory = category;
+            return View(model);
+        }
+
 
         // POST: Products/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -80,7 +111,7 @@ namespace Storage.Controllers
             }
             return View(product);
         }
-
+       
         // POST: Products/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -144,6 +175,7 @@ namespace Storage.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        #endregion
 
         private bool ProductExists(int id)
         {
